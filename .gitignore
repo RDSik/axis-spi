@@ -1,0 +1,5 @@
+!project/*.tcl
+work
+*.vcd
+*.wlf
+transcript

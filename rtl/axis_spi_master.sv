@@ -47,6 +47,8 @@ logic                          edge_done_d;
 
 logic                          spi_clk_reg;
 logic                          spi_cs_reg;
+logic                          tlast_flag;
+logic                          m_axis_tlast_reg;
 logic                          m_axis_tvalid_reg;
 logic [DATA_WIDTH-1:0]         m_axis_tdata_reg;
 
@@ -103,12 +105,12 @@ always_ff @(posedge clk_i or negedge arstn_i) begin
             end
             DATA: begin
                 if (edge_done) begin
-                    // if (s_axis.tlast) begin
+                    if (tlast_flag) begin
                         state      <= WAIT;
                         spi_cs_reg <= 1'b1;
-                    // end else begin
-                        // state <= IDLE;
-                    // end
+                    end else begin
+                        state <= IDLE;
+                    end
                 end
             end
             WAIT: begin
@@ -244,13 +246,16 @@ end
 // Master AXI-Stream data--------------------------------------
 always_ff @(posedge clk_i or negedge arstn_i) begin
     if (~arstn_i) begin
+        m_axis_tlast_reg  <= '0;
         m_axis_tvalid_reg <= '0;
         m_axis_tdata_reg  <= '0;
     end else if (edge_done_d) begin
+        m_axis_tvalid_reg <= (tlast_flag) ? 1'b1 : 1'b0;
         m_axis_tvalid_reg <= 1'b1;
         m_axis_tdata_reg  <= rx_data;
     end else if (m_handshake) begin
         m_axis_tvalid_reg <= 1'b0;
+        m_axis_tlast_reg  <= 1'b0;
     end
 end
 // ------------------------------------------------------------
@@ -259,9 +264,20 @@ always_ff @(posedge clk_i) begin
     s_handshake_d <= s_handshake;
 end
 
+always_ff @(posedge clk_i or negedge arstn_i) begin
+    if (~arstn_i) begin
+        tlast_flag <= 1'b0;
+    end else if (s_axis.tlast) begin
+        tlast_flag <= 1'b1;
+    end else if (m_handshake) begin
+        tlast_flag <= 1'b0;
+    end
+end
+
 assign s_axis.tready = (state == IDLE) ? 1'b1 : 1'b0;
 assign m_axis.tvalid = m_axis_tvalid_reg;
 assign m_axis.tdata  = m_axis_tdata_reg;
+assign m_axis.tlast  = m_axis_tlast_reg;
 assign s_handshake   = s_axis.tvalid & s_axis.tready;
 assign m_handshake   = m_axis.tvalid & m_axis.tready;
 

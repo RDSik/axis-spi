@@ -49,6 +49,7 @@ class environment;
                 void'(std::randomize(delay) with {delay inside {[min_delay:max_delay]};});
                 repeat (delay) @(posedge dut_if.clk_i);
                 s_axis.tvalid = 1'b1;
+                s_axis.tlast  = $urandom_range(0, 1);
                 if (!std::randomize(tmp_data) with {tmp_data inside {[0:(2**data_width)-1]};})
                     $error("tdata was not randomized!");
                 s_axis.tdata  = tmp_data;

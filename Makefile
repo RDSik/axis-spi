@@ -16,8 +16,8 @@ SRC_FILES += $(RTL_DIR)/axis_spi_master.sv
 SRC_FILES += $(RTL_DIR)/axis_data_gen.sv
 SRC_FILES += $(RTL_DIR)/axis_fifo.sv
 
-SRC_FILES += $(TB_DIR)/axis_spi_master_tb.sv
-SRC_FILES += $(TB_DIR)/axis_spi_master_if.sv
+SRC_FILES += $(TB_DIR)/axis_spi_top_tb.sv
+SRC_FILES += $(TB_DIR)/axis_spi_top_if.sv
 SRC_FILES += $(TB_DIR)/environment.sv
 
 .PHONY: sim project program clean

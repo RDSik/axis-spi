@@ -1,5 +1,10 @@
-!project/*.tcl
+project/*
+!project.tcl
+!axis_spi_top.sdc
+!axis_spi_top.cst
+obj_dir
 work
+transcript
+*.vvp
 *.vcd
 *.wlf
-transcript

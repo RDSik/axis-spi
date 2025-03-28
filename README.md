@@ -1,7 +1,7 @@
 [![Simulation and build project](https://github.com/RDSik/axis-spi/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/RDSik/axis-spi/actions/workflows/main.yml)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/RDSik/axis-spi/blob/master/LICENSE.txt)
 
-# AXI-Stream UART module
+# AXI-Stream SPI module
 
 This is simple SPI with AXI-Stream interface. 
 

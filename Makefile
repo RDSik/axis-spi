@@ -17,7 +17,7 @@ SRC_FILES += $(RTL_DIR)/axis_data_gen.sv
 SRC_FILES += $(RTL_DIR)/axis_fifo.sv
 
 SRC_FILES += $(TB_DIR)/axis_spi_master_tb.sv
-SRC_FILES += $(TB_DIR)/axis_uart_master_if.sv
+SRC_FILES += $(TB_DIR)/axis_spi_master_if.sv
 SRC_FILES += $(TB_DIR)/environment.sv
 
 .PHONY: sim project program clean
@@ -40,7 +40,7 @@ wave:
 	gtkwave $(TOP)_tb.vcd
 
 project:
-	gw_sh $(PROJECT_DIR)/$(GOWIN_TCL)
+	gw_sh $(PROJECT_DIR)/$(TCL)
 
 program:
 	openFPGALoader -b $(BOARD) -m $(PROJECT_DIR)/$(TOP)/impl/pnr/$(TOP).fs

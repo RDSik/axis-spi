@@ -56,8 +56,10 @@ class environment;
                 repeat (delay) @(posedge dut_if.clk_i);
                 s_axis.tvalid = 1'b1;
                 s_axis.tlast  = (packet_cnt == packet_num) ? 1'b1 : 1'b0;
+                /* verilator lint_off WIDTHTRUNC */
                 if (!std::randomize(tmp_data) with {tmp_data inside {[0:(2**data_width)-1]};})
                     $error("tdata was not randomized!");
+                /* verilator lint_on WIDTHTRUNC */
                 s_axis.tdata  = tmp_data;
                 do begin
                     @(posedge dut_if.clk_i);

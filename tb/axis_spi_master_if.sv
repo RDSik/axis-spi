@@ -1,5 +1,5 @@
 interface axis_spi_master_if #(
-    parameter SLAVE_NUM    = 1
+    parameter SLAVE_NUM = 1
 );
 
 bit clk_i;

@@ -1,3 +1,4 @@
+/* verilator lint_off TIMESCALEMOD */
 module axis_data_gen #(
     parameter CONFIG_MEM = "rtl/config.mem",
     parameter MEM_DEPTH  = 24,

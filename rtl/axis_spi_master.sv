@@ -8,6 +8,7 @@
 //            3   |             1             |        1
 // -------------------------------------------------------------------------
 
+/* verilator lint_off TIMESCALEMOD */
 module axis_spi_master #(
     parameter SPI_MODE     = 1,
     parameter DATA_WIDTH   = 8,

@@ -1,3 +1,4 @@
+/* verilator lint_off TIMESCALEMOD */
 module axis_spi_top #(
     parameter SPI_MODE     = 1,
     parameter DATA_WIDTH   = 8,

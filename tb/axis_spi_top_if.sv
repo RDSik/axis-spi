@@ -1,4 +1,4 @@
-interface axis_spi_master_if #(
+interface axis_spi_top_if #(
     parameter SLAVE_NUM = 1
 );
 

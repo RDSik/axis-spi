@@ -2,7 +2,7 @@
 
 `include "environment.sv"
 
-module axis_spi_master_tb ();
+module axis_spi_top_tb ();
 
 localparam SPI_MODE     = 3;
 localparam DATA_WIDTH   = 8;
@@ -17,9 +17,9 @@ localparam MAX_DELAY  = 10;
 localparam MIN_DELAY  = 0;
 localparam PACKET_NUM = 10;
 
-axis_spi_master_if dut_if();
-axis_if            s_axis();
-axis_if            m_axis();
+axis_spi_top_if dut_if();
+axis_if         s_axis();
+axis_if         m_axis();
 
 assign dut_if.spi_miso_i = dut_if.spi_mosi_o;
 
@@ -31,8 +31,8 @@ initial begin
 end
 
 initial begin
-    $dumpfile("axis_spi_master_tb.vcd");
-    $dumpvars(0, axis_spi_master_tb);
+    $dumpfile("axis_spi_top_tb.vcd");
+    $dumpvars(0, axis_spi_top_tb);
 end
 
 axis_spi_master #(

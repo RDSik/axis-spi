@@ -3,9 +3,9 @@
 
 class environment;
 
-    local virtual axis_spi_master_if dut_if;
-    local virtual axis_if            s_axis;
-    local virtual axis_if            m_axis;
+    local virtual axis_spi_top_if dut_if;
+    local virtual axis_if         s_axis;
+    local virtual axis_if         m_axis;
 
     int clk_per;
     int sim_time;
@@ -14,7 +14,7 @@ class environment;
     int min_delay;
     int packet_num;
 
-    function new(virtual axis_spi_master_if dut_if, virtual axis_if s_axis, virtual axis_if m_axis,
+    function new(virtual axis_spi_top_if dut_if, virtual axis_if s_axis, virtual axis_if m_axis,
                 int clk_per, int sim_time, int data_width, int max_delay, int min_delay, int packet_num);
         this.dut_if     = dut_if;
         this.s_axis     = s_axis;
@@ -42,7 +42,7 @@ class environment;
     task master_drive(int max_delay, int min_delay, int packet_num);
         logic [7:0] tmp_data;
         int delay;
-        int packet_cnt = 0;
+        int packet_cnt = 1;
         begin
             wait(~dut_if.arstn_i);
             s_axis.tvalid = '0;
@@ -61,6 +61,7 @@ class environment;
                     @(posedge dut_if.clk_i);
                 end
                 while (~s_axis.tready);
+                $display("%0d AXIS transaction detect in %g ns\n", packet_cnt, $time);
                 s_axis.tvalid = 1'b0;
                 s_axis.tlast  = 1'b0;
                 if (packet_cnt == packet_num) begin

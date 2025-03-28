@@ -9,19 +9,17 @@ class environment;
 
     int clk_per;
     int sim_time;
-    int data_width;
     int max_delay;
     int min_delay;
     int packet_num;
 
     function new(virtual axis_spi_top_if dut_if, virtual axis_if s_axis, virtual axis_if m_axis,
-                int clk_per, int sim_time, int data_width, int max_delay, int min_delay, int packet_num);
+                int clk_per, int sim_time, int max_delay, int min_delay, int packet_num);
         this.dut_if     = dut_if;
         this.s_axis     = s_axis;
         this.m_axis     = m_axis;
         this.clk_per    = clk_per;
         this.sim_time   = sim_time;
-        this.data_width = data_width;
         this.max_delay  = max_delay;
         this.min_delay  = min_delay;
         this.packet_num = packet_num;
@@ -58,7 +56,7 @@ class environment;
                 s_axis.tlast  = (packet_cnt == packet_num) ? 1'b1 : 1'b0;
                 /* verilator lint_off CONSTRAINTIGN */
                 /* verilator lint_off WIDTHTRUNC */
-                if (!std::randomize(tmp_data) with {tmp_data inside {[0:(2**data_width)-1]};})
+                if (!std::randomize(tmp_data) with {tmp_data inside {[0:(2**7)-1]};})
                     $error("tdata was not randomized!");
                 /* verilator lint_on WIDTHTRUNC */
                 /* verilator lint_on CONSTRAINTIGN */

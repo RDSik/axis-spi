@@ -26,7 +26,7 @@ assign dut_if.spi_miso_i = dut_if.spi_mosi_o;
 environment env;
 
 initial begin
-    env = new(dut_if, s_axis, m_axis, CLK_PER, SIM_TIME, DATA_WIDTH, MAX_DELAY, MIN_DELAY, PACKET_NUM);
+    env = new(dut_if, s_axis, m_axis, CLK_PER, SIM_TIME, MAX_DELAY, MIN_DELAY, PACKET_NUM);
     env.run();
 end
 

@@ -12,9 +12,10 @@ class environment;
     int data_width;
     int max_delay;
     int min_delay;
+    int packet_num;
 
     function new(virtual axis_spi_master_if dut_if, virtual axis_if s_axis, virtual axis_if m_axis,
-                int clk_per, int sim_time, int data_width, int max_delay, int min_delay);
+                int clk_per, int sim_time, int data_width, int max_delay, int min_delay, int packet_num);
         this.dut_if     = dut_if;
         this.s_axis     = s_axis;
         this.m_axis     = m_axis;
@@ -23,6 +24,7 @@ class environment;
         this.data_width = data_width;
         this.max_delay  = max_delay;
         this.min_delay  = min_delay;
+        this.packet_num = packet_num;
     endfunction
 
     task run();
@@ -30,26 +32,28 @@ class environment;
             fork
                 clock_gen();
                 reset_gen(max_delay);
-                master_drive(max_delay, min_delay);
+                master_drive(max_delay, min_delay, packet_num);
                 slave_drive(max_delay, min_delay);
             join_none
             time_out(sim_time);
         end
     endtask
 
-    task master_drive(int max_delay, int min_delay);
+    task master_drive(int max_delay, int min_delay, int packet_num);
         logic [7:0] tmp_data;
         int delay;
+        int packet_cnt = 0;
         begin
             wait(~dut_if.arstn_i);
-            s_axis.tvalid = 1'b0;
+            s_axis.tvalid = '0;
+            s_axis.tlast  = '0;
             s_axis.tdata  = '0;
             wait(dut_if.arstn_i);
             forever begin
                 void'(std::randomize(delay) with {delay inside {[min_delay:max_delay]};});
                 repeat (delay) @(posedge dut_if.clk_i);
                 s_axis.tvalid = 1'b1;
-                s_axis.tlast  = $urandom_range(0, 1);
+                s_axis.tlast  = (packet_cnt == packet_num) ? 1'b1 : 1'b0;
                 if (!std::randomize(tmp_data) with {tmp_data inside {[0:(2**data_width)-1]};})
                     $error("tdata was not randomized!");
                 s_axis.tdata  = tmp_data;
@@ -58,6 +62,12 @@ class environment;
                 end
                 while (~s_axis.tready);
                 s_axis.tvalid = 1'b0;
+                s_axis.tlast  = 1'b0;
+                if (packet_cnt == packet_num) begin
+                    packet_cnt = 0;
+                end else begin
+                    packet_cnt++;
+                end
             end
         end
     endtask
@@ -66,7 +76,7 @@ class environment;
         int delay;
         begin
             wait(~dut_if.arstn_i);
-            m_axis.tready = 1'b0;
+            m_axis.tready = '0;
             wait(dut_if.arstn_i);
             forever begin
                 void'(std::randomize(delay) with {delay inside {[min_delay:max_delay]};});

@@ -57,7 +57,9 @@ class environment;
                 s_axis.tvalid = 1'b1;
                 s_axis.tlast  = (packet_cnt == packet_num) ? 1'b1 : 1'b0;
                 `ifdef VERILATOR
+                    /* verilator lint_off WIDTHTRUNC */
                     s_axis.tdata = $urandom_range(0, 2**(data_width)-1);
+                    /* verilator lint_on WIDTHTRUNC */
                 `else
                     if (!std::randomize(tmp_data) with {tmp_data inside {[0:(2**data_width)-1]};})
                         $error("tdata was not randomized!");

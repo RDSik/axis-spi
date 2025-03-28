@@ -56,17 +56,13 @@ class environment;
                 repeat (delay) @(posedge dut_if.clk_i);
                 s_axis.tvalid = 1'b1;
                 s_axis.tlast  = (packet_cnt == packet_num) ? 1'b1 : 1'b0;
-                /* verilator lint_off CONSTRAINTIGN */
-                /* verilator lint_off WIDTHTRUNC */
                 `ifdef VERILATOR
-                    void'(std::randomize(tmp_data) with {tmp_data inside {[0:(2**data_width)-1]};})
+                    s_axis.tdata = $urandom_range(0, 2**(data_width)-1);
                 `else
-                if (!std::randomize(tmp_data) with {tmp_data inside {[0:(2**data_width)-1]};})
-                    $error("tdata was not randomized!");
+                    if (!std::randomize(tmp_data) with {tmp_data inside {[0:(2**data_width)-1]};})
+                        $error("tdata was not randomized!");
+                    s_axis.tdata  = tmp_data;
                 `endif
-                /* verilator lint_on WIDTHTRUNC */
-                /* verilator lint_on CONSTRAINTIGN */
-                s_axis.tdata  = tmp_data;
                 do begin
                     @(posedge dut_if.clk_i);
                 end
@@ -124,9 +120,9 @@ class environment;
             repeat (sim_time) @(posedge dut_if.clk_i);
             $display("Stop simulation at: %g ns\n", $time);
             `ifdef VERILATOR
-            $finish();
+                $finish();
             `else
-            $stop();
+                $stop();
             `endif
         end
     endtask

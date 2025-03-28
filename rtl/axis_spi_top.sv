@@ -28,7 +28,7 @@ axis_spi_master #(
     .SPI_CLK       (SPI_CLK   ),
     .SLAVE_NUM     (SLAVE_NUM ),
     .WAIT_TIME     (WAIT_TIME )
-) u_axis_spi_master (
+) i_axis_spi_master (
     .clk_i         (clk_i     ),
     .arstn_i       (arstn_i   ),
     .addr_i        ('1        ),
@@ -44,7 +44,7 @@ axis_data_gen #(
     .CONFIG_MEM    (CONFIG_MEM),
     .MEM_DEPTH     (MEM_DEPTH ),
     .MEM_WIDTH     (MEM_WIDTH )
-) u_axis_data_gen (
+) i_axis_data_gen (
     .clk_i         (clk_i     ),
     .arstn_i       (arstn_i   ),
     .m_axis        (s_axis    )

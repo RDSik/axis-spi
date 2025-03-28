@@ -271,7 +271,7 @@ end
 always_ff @(posedge clk_i or negedge arstn_i) begin
     if (~arstn_i) begin
         tlast_flag <= 1'b0;
-    end else if (m_handshake) begin
+    end else if (m_handshake | s_handshake) begin
         tlast_flag <= 1'b0;
     end else if (s_axis.tlast) begin
         tlast_flag <= 1'b1;

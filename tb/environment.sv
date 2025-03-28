@@ -50,7 +50,9 @@ class environment;
             s_axis.tdata  = '0;
             wait(dut_if.arstn_i);
             forever begin
+                /* verilator lint_off CONSTRAINTIGN */
                 void'(std::randomize(delay) with {delay inside {[min_delay:max_delay]};});
+                /* verilator lint_on CONSTRAINTIGN */
                 repeat (delay) @(posedge dut_if.clk_i);
                 s_axis.tvalid = 1'b1;
                 s_axis.tlast  = (packet_cnt == packet_num) ? 1'b1 : 1'b0;
@@ -80,7 +82,9 @@ class environment;
             m_axis.tready = '0;
             wait(dut_if.arstn_i);
             forever begin
+                /* verilator lint_off CONSTRAINTIGN */
                 void'(std::randomize(delay) with {delay inside {[min_delay:max_delay]};});
+                /* verilator lint_on CONSTRAINTIGN */
                 repeat (delay) @(posedge dut_if.clk_i);
                 m_axis.tready = 1'b1;
                 @(posedge dut_if.clk_i);

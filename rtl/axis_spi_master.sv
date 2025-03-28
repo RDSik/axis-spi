@@ -19,7 +19,9 @@ module axis_spi_master #(
 ) (
     input  logic                         clk_i,
     input  logic                         arstn_i,
+    /* verilator lint_off ASCRANGE */
     input  logic [$clog2(SLAVE_NUM)-1:0] addr_i,
+    /* verilator lint_on ASCRANGE */
     output logic                         spi_clk_o,
     output logic [SLAVE_NUM-1:0]         spi_cs_o,
     output logic                         spi_mosi_o,
@@ -153,8 +155,10 @@ always_ff @(posedge clk_i or negedge arstn_i) begin
     end
 end
 
+/* verilator lint_off WIDTHEXPAND */
 assign clk_done      = (clk_cnt == DIVIDER - 1) ? 1'b1 : 1'b0;
 assign half_clk_done = (clk_cnt == HALF_DIVIDER - 1) ? 1'b1 : 1'b0;
+/* verilator lint_on WIDTHEXPAND */
 
 always_ff @(posedge clk_i or negedge arstn_i) begin
     if (~arstn_i) begin
@@ -206,10 +210,14 @@ end
 // MISO data---------------------------------------------------
 always_ff @(posedge clk_i or negedge arstn_i) begin
     if (~arstn_i) begin
+        /* verilator lint_off WIDTHTRUNC */
         rx_bit_cnt <= DATA_WIDTH - 1;
+        /* verilator lint_on WIDTHTRUNC */
         rx_data    <= '0;
     end else if (s_handshake) begin
+        /* verilator lint_off WIDTHTRUNC */
         rx_bit_cnt <= DATA_WIDTH - 1;
+        /* verilator lint_on WIDTHTRUNC */
     end else if ((leading_edge & ~CPHA) || (trailing_edge & CPHA)) begin
         rx_bit_cnt          <= rx_bit_cnt - 1'b1;
         rx_data[rx_bit_cnt] <= spi_miso_i;
@@ -222,12 +230,18 @@ assign rx_bit_done = ~(|(rx_bit_cnt));
 // MOSI data---------------------------------------------------
 always_ff @(posedge clk_i or negedge arstn_i) begin
     if (~arstn_i) begin
+        /* verilator lint_off WIDTHTRUNC */
         tx_bit_cnt <= DATA_WIDTH - 1;
+        /* verilator lint_on WIDTHTRUNC */
         spi_mosi_o <= '0;
     end else if (s_handshake) begin
+        /* verilator lint_off WIDTHTRUNC */
         tx_bit_cnt <= DATA_WIDTH - 1;
+        /* verilator lint_on WIDTHTRUNC */
     end else if (s_handshake_d & ~CPHA) begin // Catch the case where we start transaction and CPHA = 0
+        /* verilator lint_off WIDTHTRUNC */
         tx_bit_cnt <= DATA_WIDTH - 2;
+        /* verilator lint_on WIDTHTRUNC */
         spi_mosi_o <= tx_data[DATA_WIDTH-1];
     end else if ((leading_edge & CPHA) || (trailing_edge & ~CPHA)) begin
         tx_bit_cnt <= tx_bit_cnt - 1'b1;

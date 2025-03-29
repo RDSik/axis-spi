@@ -11,7 +11,7 @@ localparam SPI_CLK      = 6_750_000;
 localparam SLAVE_NUM    = 1;
 localparam WAIT_TIME    = 50;
 
-localparam CLK_PER    = 2;
+localparam CLK_PER_NS = 10**9/MAIN_CLK;
 localparam SIM_TIME   = 1000;
 localparam MAX_DELAY  = 10;
 localparam MIN_DELAY  = 0;
@@ -26,7 +26,7 @@ assign dut_if.spi_miso_i = dut_if.spi_mosi_o;
 environment env;
 
 initial begin
-    env = new(dut_if, s_axis, m_axis, CLK_PER, SIM_TIME, MAX_DELAY, MIN_DELAY, PACKET_NUM, DATA_WIDTH);
+    env = new(dut_if, s_axis, m_axis, CLK_PER_NS, SIM_TIME, MAX_DELAY, MIN_DELAY, PACKET_NUM, DATA_WIDTH);
     env.run();
 end
 

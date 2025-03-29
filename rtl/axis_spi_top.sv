@@ -22,10 +22,6 @@ module axis_spi_top #(
 axis_if s_axis();
 axis_if m_axis();
 
-logic [$clog2(SLAVE_NUM)-1:0] addr_i;
-
-assign addr_i = '0;
-
 axis_spi_master #(
     .SPI_MODE   (SPI_MODE  ),
     .DATA_WIDTH (DATA_WIDTH),
@@ -36,7 +32,7 @@ axis_spi_master #(
 ) i_axis_spi_master (
     .clk_i      (clk_i     ),
     .arstn_i    (arstn_i   ),
-    .addr_i     (addr_i    ),
+    .addr_i     ('0        ),
     .spi_clk_o  (spi_clk_o ),
     .spi_cs_o   (spi_cs_o  ),
     .spi_mosi_o (spi_mosi_o),

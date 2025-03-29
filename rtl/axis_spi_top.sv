@@ -10,13 +10,13 @@ module axis_spi_top #(
     parameter MEM_DEPTH    = 24,
     parameter MEM_WIDTH    = 16
 ) (
-    input  logic                 clk_i,
-    input  logic                 arstn_i,
+    input  logic clk_i,
+    input  logic arstn_i,
 
-    output logic                 spi_clk_o,
-    output logic [SLAVE_NUM-1:0] spi_cs_o,
-    output logic                 spi_mosi_o,
-    input  logic                 spi_miso_i
+    output logic spi_clk_o,
+    output logic spi_cs_o,
+    output logic spi_mosi_o,
+    input  logic spi_miso_i
 );
 
 axis_if s_axis();
@@ -32,7 +32,7 @@ axis_spi_master #(
 ) i_axis_spi_master (
     .clk_i      (clk_i     ),
     .arstn_i    (arstn_i   ),
-    .addr_i     ('1        ),
+    .addr_i     ('0        ),
     .spi_clk_o  (spi_clk_o ),
     .spi_cs_o   (spi_cs_o  ),
     .spi_mosi_o (spi_mosi_o),

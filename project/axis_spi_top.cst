@@ -1,0 +1,6 @@
+IO_LOC "clk_i"      H11;
+IO_LOC "arstn_i"    C7;
+IO_LOC "spi_clk_o"  T9;
+IO_LOC "spi_mosi_o" T7;
+IO_LOC "spi_miso_i" P11;
+IO_LOC "spi_cs_o"   P6;

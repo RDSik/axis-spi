@@ -12,6 +12,7 @@ module axis_spi_top #(
 ) (
     input  logic                 clk_i,
     input  logic                 arstn_i,
+
     output logic                 spi_clk_o,
     output logic [SLAVE_NUM-1:0] spi_cs_o,
     output logic                 spi_mosi_o,
@@ -22,32 +23,32 @@ axis_if s_axis();
 axis_if m_axis();
 
 axis_spi_master #(
-    .SPI_MODE      (SPI_MODE  ),
-    .DATA_WIDTH    (DATA_WIDTH),
-    .MAIN_CLK      (MAIN_CLK  ),
-    .SPI_CLK       (SPI_CLK   ),
-    .SLAVE_NUM     (SLAVE_NUM ),
-    .WAIT_TIME     (WAIT_TIME )
+    .SPI_MODE   (SPI_MODE  ),
+    .DATA_WIDTH (DATA_WIDTH),
+    .MAIN_CLK   (MAIN_CLK  ),
+    .SPI_CLK    (SPI_CLK   ),
+    .SLAVE_NUM  (SLAVE_NUM ),
+    .WAIT_TIME  (WAIT_TIME )
 ) i_axis_spi_master (
-    .clk_i         (clk_i     ),
-    .arstn_i       (arstn_i   ),
-    .addr_i        ('1        ),
-    .spi_clk_o     (spi_clk_o ),
-    .spi_cs_o      (spi_cs_o  ),
-    .spi_mosi_o    (spi_mosi_o),
-    .spi_miso_i    (spi_miso_i),
-    .s_axis        (s_axis    ),
-    .m_axis        (m_axis    )
+    .clk_i      (clk_i     ),
+    .arstn_i    (arstn_i   ),
+    .addr_i     ('1        ),
+    .spi_clk_o  (spi_clk_o ),
+    .spi_cs_o   (spi_cs_o  ),
+    .spi_mosi_o (spi_mosi_o),
+    .spi_miso_i (spi_miso_i),
+    .s_axis     (s_axis    ),
+    .m_axis     (m_axis    )
 );
 
 axis_data_gen #(
-    .CONFIG_MEM    (CONFIG_MEM),
-    .MEM_DEPTH     (MEM_DEPTH ),
-    .MEM_WIDTH     (MEM_WIDTH )
+    .CONFIG_MEM (CONFIG_MEM),
+    .MEM_DEPTH  (MEM_DEPTH ),
+    .MEM_WIDTH  (MEM_WIDTH )
 ) i_axis_data_gen (
-    .clk_i         (clk_i     ),
-    .arstn_i       (arstn_i   ),
-    .m_axis        (s_axis    )
+    .clk_i      (clk_i     ),
+    .arstn_i    (arstn_i   ),
+    .m_axis     (s_axis    )
 );
 
 endmodule

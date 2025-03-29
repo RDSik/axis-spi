@@ -51,7 +51,7 @@ ifeq ($(OS), Windows_NT)
 	del transcript
 	del *.vcd
 	del *.wlf
-	# rmdir /s /q $(PROJECT_DIR)\$(TOP)
+	rmdir /s /q $(PROJECT_DIR)\$(TOP)
 else
 	rm -rf obj_dir
 	rm -rf work

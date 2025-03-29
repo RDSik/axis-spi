@@ -30,7 +30,7 @@ class environment;
     task run();
         begin
             fork
-                clock_gen();
+                clock_gen(clk_per);
                 reset_gen(max_delay);
                 master_drive(max_delay, min_delay, packet_num);
                 slave_drive(max_delay, min_delay);
@@ -42,7 +42,7 @@ class environment;
     task master_drive(int max_delay, int min_delay, int packet_num);
         logic [7:0] tmp_data;
         int delay;
-        int packet_cnt = 1;
+        int packet_cnt = 0;
         begin
             wait(~dut_if.arstn_i);
             s_axis.tvalid = '0;
@@ -108,7 +108,7 @@ class environment;
         end
     endtask
 
-    task clock_gen();
+    task clock_gen(int clk_per);
         begin
             dut_if.clk_i = 1'b0;
             forever begin

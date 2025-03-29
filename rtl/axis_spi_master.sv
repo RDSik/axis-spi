@@ -22,6 +22,7 @@ module axis_spi_master #(
     /* verilator lint_off ASCRANGE */
     input  logic [$clog2(SLAVE_NUM)-1:0] addr_i,
     /* verilator lint_on ASCRANGE */
+
     output logic                         spi_clk_o,
     output logic [SLAVE_NUM-1:0]         spi_cs_o,
     output logic                         spi_mosi_o,
@@ -31,11 +32,11 @@ module axis_spi_master #(
     axis_if.master                       m_axis
 );
 
-localparam DIVIDER       = MAIN_CLK/SPI_CLK;
-localparam HALF_DIVIDER  = DIVIDER/2;
-localparam EDGE_NUM      = DATA_WIDTH*2; // need 16 edges to transmit 8 bits
-localparam CPHA          = (SPI_MODE == 1) || (SPI_MODE == 3);
-localparam CPOL          = (SPI_MODE == 2) || (SPI_MODE == 3);
+localparam DIVIDER      = MAIN_CLK/SPI_CLK;
+localparam HALF_DIVIDER = DIVIDER/2;
+localparam EDGE_NUM     = DATA_WIDTH*2; // need 16 edges to transmit 8 bits
+localparam CPHA         = (SPI_MODE == 1) || (SPI_MODE == 3);
+localparam CPOL         = (SPI_MODE == 2) || (SPI_MODE == 3);
 
 logic [$clog2(WAIT_TIME)-1:0]  wait_cnt;
 logic                          wait_done;

@@ -80,21 +80,19 @@ typedef enum logic [1:0] {
 
 my_state state;
 
-generate;
-    if (SLAVE_NUM == 1) begin
-        assign spi_cs_o = spi_cs_reg;
-    end else begin
-        always_comb begin
-            for (int i = 0; i < SLAVE_NUM; i++) begin
-                if (i == addr_i) begin
-                    spi_cs_o[i] = spi_cs_reg;
-                end else begin
-                    spi_cs_o[i] = 1'b1;
-                end
+if (SLAVE_NUM == 1) begin
+    assign spi_cs_o = spi_cs_reg;
+end else begin
+    always_comb begin
+        for (int i = 0; i < SLAVE_NUM; i++) begin
+            if (i == addr_i) begin
+                spi_cs_o[i] = spi_cs_reg;
+            end else begin
+                spi_cs_o[i] = 1'b1;
             end
         end
     end
-endgenerate
+end
 
 always_ff @(posedge clk_i or negedge arstn_i) begin
     if (~arstn_i) begin

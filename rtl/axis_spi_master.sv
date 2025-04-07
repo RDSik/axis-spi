@@ -100,7 +100,7 @@ always_ff @(posedge clk_i or negedge arstn_i) begin
         spi_cs_reg <= 1'b1;
         wait_flag  <= 1'b0;
     end else begin
-        case(state)
+        case (state)
             IDLE: begin
                 if (s_axis.tvalid) begin
                     state      <= DATA;

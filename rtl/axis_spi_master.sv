@@ -40,7 +40,6 @@ localparam CPOL         = (SPI_MODE == 2) || (SPI_MODE == 3);
 
 logic [$clog2(WAIT_TIME)-1:0]  wait_cnt;
 logic                          wait_done;
-logic                          wait_flag;
 
 logic [$clog2(DIVIDER)-1:0]    clk_cnt;
 logic                          clk_done;
@@ -98,28 +97,28 @@ always_ff @(posedge clk_i or negedge arstn_i) begin
     if (~arstn_i) begin
         state      <= IDLE;
         spi_cs_reg <= 1'b1;
-        wait_flag  <= 1'b0;
+        tlast_flag <= 1'b0;
     end else begin
         case (state)
             IDLE: begin
                 if (s_axis.tvalid) begin
                     state      <= DATA;
                     spi_cs_reg <= 1'b0;
+                    tlast_flag <= s_axis.tlast;
                 end
             end
             DATA: begin
-                wait_flag <= 1'b0;
                 if (edge_done) begin
                     if (tlast_flag) begin
                         state      <= WAIT;
                         spi_cs_reg <= 1'b1;
+                        tlast_flag <= 1'b0;
                     end else begin
                         state <= IDLE;
                     end
                 end
             end
             WAIT: begin
-                wait_flag <= 1'b1;
                 if (wait_done) begin
                     state <= IDLE;
                 end
@@ -164,6 +163,7 @@ always_ff @(posedge clk_i or negedge arstn_i) begin
         trailing_edge <= 1'b0;
         leading_edge  <= 1'b0;
         edge_cnt      <= '0;
+        spi_clk_reg   <= CPOL;
     end else begin
         trailing_edge <= 1'b0;
         leading_edge  <= 1'b0;
@@ -173,9 +173,11 @@ always_ff @(posedge clk_i or negedge arstn_i) begin
             if (clk_done) begin
                 trailing_edge <= 1'b1;
                 edge_cnt      <= edge_cnt - 1'b1;
+                spi_clk_reg   <= ~spi_clk_reg;
             end else if (half_clk_done) begin
                 leading_edge <= 1'b1;
                 edge_cnt     <= edge_cnt - 1'b1;
+                spi_clk_reg  <= ~spi_clk_reg;
             end
         end
     end
@@ -184,19 +186,11 @@ end
 assign edge_done = ~(|edge_cnt);
 
 always_ff @(posedge clk_i) begin
-    edge_done_d <= edge_done;
+    edge_done_d <= (state == WAIT) ? 1'b0 : edge_done;
 end
 // ------------------------------------------------------------
 
 // SPI clock---------------------------------------------------
-always_ff @(posedge clk_i or negedge arstn_i) begin
-    if (~arstn_i) begin
-        spi_clk_reg <= CPOL;
-    end else if (clk_done | half_clk_done) begin
-        spi_clk_reg <= ~spi_clk_reg;
-    end
-end
-
 always_ff @(posedge clk_i or negedge arstn_i) begin
     if (~arstn_i) begin
         spi_clk_o <= CPOL;
@@ -270,8 +264,8 @@ always_ff @(posedge clk_i or negedge arstn_i) begin
     end else if (m_handshake) begin
         m_axis_tvalid_reg <= 1'b0;
         m_axis_tlast_reg  <= 1'b0;
-    end else if (edge_done_d & ~wait_flag) begin
-        m_axis_tlast_reg  <= (tlast_flag) ? 1'b1 : 1'b0;
+    end else if (edge_done_d) begin
+        m_axis_tlast_reg  <= (state == WAIT) ? 1'b1 : 1'b0;
         m_axis_tvalid_reg <= 1'b1;
         m_axis_tdata_reg  <= rx_data;
     end
@@ -280,16 +274,6 @@ end
 
 always_ff @(posedge clk_i) begin
     s_handshake_d <= s_handshake;
-end
-
-always_ff @(posedge clk_i or negedge arstn_i) begin
-    if (~arstn_i) begin
-        tlast_flag <= 1'b0;
-    end else if (m_handshake | s_handshake) begin
-        tlast_flag <= 1'b0;
-    end else if (s_axis.tlast) begin
-        tlast_flag <= 1'b1;
-    end
 end
 
 assign s_axis.tready = (state == IDLE) ? 1'b1 : 1'b0;

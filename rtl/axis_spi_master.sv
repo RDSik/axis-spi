@@ -217,7 +217,7 @@ always_ff @(posedge clk_i or negedge arstn_i) begin
     end
 end
 
-assign rx_bit_done = ~(|(rx_bit_cnt));
+assign rx_bit_done = ~(|rx_bit_cnt);
 // ------------------------------------------------------------
 
 // MOSI data---------------------------------------------------
@@ -242,7 +242,7 @@ always_ff @(posedge clk_i or negedge arstn_i) begin
     end
 end
 
-assign tx_bit_done = ~(|(tx_bit_cnt));
+assign tx_bit_done = ~(|tx_bit_cnt);
 // ------------------------------------------------------------
 
 // Slave AXI-Stream data---------------------------------------

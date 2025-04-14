@@ -72,9 +72,9 @@ logic                          s_handshake;
 logic                          s_handshake_d;
 
 typedef enum logic [1:0] {
-    IDLE  = 2'b00,
-    DATA  = 2'b01,
-    WAIT  = 2'b10
+    IDLE = 2'b00,
+    DATA = 2'b01,
+    WAIT = 2'b10
 } my_state;
 
 my_state state;

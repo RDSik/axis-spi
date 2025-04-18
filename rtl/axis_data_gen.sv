@@ -45,7 +45,7 @@ always_ff @(posedge clk_i or negedge arstn_i) begin
     end
 end
 
-assign index_done   = (index == MEM_DEPTH - 1) ? 1'b0 : 1'b1
+assign index_done   = (index == MEM_DEPTH - 1) ? 1'b0 : 1'b1;
 assign m_handshake  = m_axis.tvalid & m_axis.tready;
 assign m_axis.tdata = config_mem[index];
 

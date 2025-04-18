@@ -24,7 +24,11 @@ always_ff @(posedge clk_i or negedge arstn_i) begin
     if (~arstn_i) begin
         index <= '0;
     end else if (m_handshake) begin
-        index <= index_done ? '0 : index + 1'b1;
+        if (index_done) begin
+            index <= '0;
+        end else begin
+            index <= index + 1'b1;
+        end
     end
 end
 

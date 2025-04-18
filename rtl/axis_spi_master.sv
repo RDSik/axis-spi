@@ -212,7 +212,9 @@ always_ff @(posedge clk_i or negedge arstn_i) begin
     end
 end
 
+/* verilator lint_off WIDTHEXPAND */
 assign rx_bit_done = (rx_bit_cnt == DATA_WIDTH - 1) ? 1'b1 : 1'b0;
+/* verilator lint_on WIDTHEXPAND */
 // ------------------------------------------------------------
 
 // MOSI data---------------------------------------------------

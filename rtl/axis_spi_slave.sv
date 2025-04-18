@@ -12,7 +12,7 @@
 module axi_spi_slave #(
     parameter SPI_MODE   = 1,
     parameter DATA_WIDTH = 8
-)(
+) (
     input logic    clk_i,
     input logic    arstn_i,
 

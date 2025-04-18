@@ -134,7 +134,6 @@ always_ff @(posedge clk_i or negedge arstn_i) begin
         m_axis_tdata_reg  <= '0;
     end else if (m_handshake) begin
         m_axis_tvalid_reg <= 1'b0;
-        m_axis_tlast_reg  <= 1'b0;
     end else if (sync) begin
         m_axis_tvalid_reg <= 1'b1;
         m_axis_tdata_reg  <= rx_data;

@@ -1,6 +1,6 @@
 module synchronizer #(
     DATA_WIDTH = 1,
-    DELAY      = 2
+    DELAY      = 3
 ) (
     input  logic                  clk_i,
     input  logic                  arstn_i,

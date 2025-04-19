@@ -116,7 +116,7 @@ always @(posedge clk_i or negedge arstn_i) begin
     end
 end
 
-assign sync = ((delay[DELAY-1] == 1'b0) & (delay[DELAY-2] == 1'b1)) ? 1'b1 : 1'b0;
+assign sync = ((delay[DELAY-1] == 1'b0) && (delay[DELAY-2] == 1'b1)) ? 1'b1 : 1'b0;
 // ------------------------------------------------------------
 
 // Slave AXI-Stream data---------------------------------------

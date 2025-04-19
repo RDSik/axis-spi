@@ -55,13 +55,16 @@ always @(posedge spi_clk or posedge spi_cs_i) begin
         rx_bit_cnt <= '0;
         rx_done    <= '0;
     end else begin
-        rx_bit_cnt <= rx_bit_done ? '0 : rx_bit_cnt + 1'b1;
-        rx_data_d  <= {rx_data_d[DATA_WIDTH-2:0], spi_mosi_i};
+        rx_data_d <= {rx_data_d[DATA_WIDTH-2:0], spi_mosi_i};
         if (rx_bit_done) begin
-            rx_data <= {rx_data_d[DATA_WIDTH-2:0], spi_mosi_i};
-            rx_done <= 1'b1;
-        end else if (rx_bit_cnt == 2) begin
-            rx_done <= 1'b0;
+            rx_data    <= {rx_data_d[DATA_WIDTH-2:0], spi_mosi_i};
+            rx_done    <= 1'b1;
+            rx_bit_cnt <= '0;
+        end else begin
+            rx_bit_cnt <= rx_bit_cnt + 1'b1;
+            if (rx_bit_cnt == 2) begin
+                rx_done <= 1'b0;
+            end
         end
     end
 end

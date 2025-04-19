@@ -140,7 +140,7 @@ always_ff @(posedge clk_i or negedge arstn_i) begin
 end
 // ------------------------------------------------------------
 
-assign s_axis.tready = s_axis.tvalid;
+assign s_axis.tready = 1'b1;
 assign m_axis.tvalid = m_axis_tvalid_reg;
 assign m_axis.tdata  = m_axis_tdata_reg;
 assign s_handshake   = s_axis.tvalid & s_axis.tready;

@@ -257,8 +257,8 @@ always_ff @(posedge clk_i or negedge arstn_i) begin
         m_axis_tvalid_reg <= '0;
         m_axis_tdata_reg  <= '0;
     end else if (m_handshake) begin
-        m_axis_tvalid_reg <= 1'b0;
         m_axis_tlast_reg  <= 1'b0;
+        m_axis_tvalid_reg <= 1'b0;
     end else if (edge_done_d) begin
         m_axis_tlast_reg  <= (state == WAIT) ? 1'b1 : 1'b0;
         m_axis_tvalid_reg <= 1'b1;

@@ -81,7 +81,7 @@ my_state state;
 if (SLAVE_NUM == 1) begin
     assign spi_cs_o = spi_cs_reg;
 end else begin
-    always_comb begin
+    always_ff @(posedge clk_i) begin
         for (int i = 0; i < SLAVE_NUM; i++) begin
             if (i == addr_i) begin
                 spi_cs_o[i] = spi_cs_reg;

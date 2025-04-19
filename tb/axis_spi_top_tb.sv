@@ -4,12 +4,12 @@
 
 module axis_spi_top_tb ();
 
-localparam SPI_MODE     = 3;
-localparam DATA_WIDTH   = 8;
-localparam MAIN_CLK     = 27_000_000;
-localparam SPI_CLK      = 6_750_000;
-localparam SLAVE_NUM    = 1;
-localparam WAIT_TIME    = 50;
+localparam SPI_MODE   = 3;
+localparam DATA_WIDTH = 8;
+localparam MAIN_CLK   = 27_000_000;
+localparam SPI_CLK    = 6_750_000;
+localparam SLAVE_NUM  = 1;
+localparam WAIT_TIME  = 50;
 
 localparam CLK_PER_NS = 10**9/MAIN_CLK;
 localparam SIM_TIME   = 1000;

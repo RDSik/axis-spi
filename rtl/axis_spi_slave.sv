@@ -120,7 +120,7 @@ assign sync = ((delay[DELAY-1] == 1'b0) & (delay[DELAY-2] == 1'b1)) ? 1'b1 : 1'b
 always_ff @(posedge clk_i or negedge arstn_i) begin
     if (~arstn_i) begin
         tx_data <= '0;
-    end else if (s_handshake) begin
+    end else if (s_axis.tvalid) begin
         tx_data <= s_axis.tdata;
     end
 end

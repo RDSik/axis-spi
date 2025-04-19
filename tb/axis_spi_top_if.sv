@@ -9,9 +9,9 @@ bit arstn_i;
 logic [$clog2(SLAVE_NUM)-1:0] addr_i;
 /* verilator lint_on ASCRANGE */
 
-logic                 spi_clk_o;
-logic [SLAVE_NUM-1:0] spi_cs_o;
-logic                 spi_mosi_o;
-logic                 spi_miso_i;
+logic                 spi_clk;
+logic [SLAVE_NUM-1:0] spi_cs;
+logic                 spi_mosi;
+logic                 spi_miso;
 
 endinterface

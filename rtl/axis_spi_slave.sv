@@ -9,7 +9,7 @@
 // -------------------------------------------------------------------------
 
 /* verilator lint_off TIMESCALEMOD */
-module axi_spi_slave #(
+module axis_spi_slave #(
     parameter SPI_MODE   = 1,
     parameter DATA_WIDTH = 8
 ) (
@@ -39,7 +39,6 @@ logic                          m_axis_tdata_reg;
 
 logic [DATA_WIDTH-1:0]         tx_data;
 logic [$clog2(DATA_WIDTH)-1:0] tx_bit_cnt;
-logic                          tx_bit_done;
 
 logic [DATA_WIDTH-1:0]         rx_data_d;
 logic [DATA_WIDTH-1:0]         rx_data;
@@ -53,12 +52,14 @@ logic                          m_handshake;
 assign spi_clk = (CPHA) ? ~spi_clk_i : spi_clk_i;
 
 // MOSI data---------------------------------------------------
-always @(posedge spi_clk or negedge arstn_i) begin
+always @(posedge spi_clk or posedge spi_cs_i) begin
     if (spi_cs_i) begin
         rx_bit_cnt <= '0;
         rx_done    <= '0;
+        rx_data    <= '0;
+        rx_data_d  <= '0;
     end else begin
-        rx_bit_cnt <= rx_bit_cnt + 1'b1;
+        rx_bit_cnt <= rx_bit_done ? '0 : rx_bit_cnt + 1'b1;
         rx_data_d  <= {rx_data_d[DATA_WIDTH-2:0], spi_mosi_i};
         if (rx_bit_done) begin
             rx_data <= {rx_data_d[DATA_WIDTH-2:0], spi_mosi_i};
@@ -87,7 +88,7 @@ always_ff @(posedge spi_clk or posedge spi_cs_i) begin
     end
 end
 
-always @(posedge spi_cs_i or posedge spi_cs_i) begin
+always @(posedge spi_clk or posedge spi_cs_i) begin
     if (spi_cs_i) begin
       preload_miso <= 1'b1;
     end else begin
@@ -141,6 +142,7 @@ always_ff @(posedge clk_i or negedge arstn_i) begin
 end
 // ------------------------------------------------------------
 
+assign s_axis.tready = s_axis.tvalid;
 assign m_axis.tvalid = m_axis_tvalid_reg;
 assign m_axis.tdata  = m_axis_tdata_reg;
 assign s_handshake   = s_axis.tvalid & s_axis.tready;

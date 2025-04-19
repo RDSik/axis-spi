@@ -20,8 +20,10 @@ localparam PACKET_NUM = 10;
 axis_spi_top_if dut_if();
 axis_if         s_axis();
 axis_if         m_axis();
+axis_if         axis_master();
+axis_if         axis_slave();
 
-assign dut_if.spi_miso_i = dut_if.spi_mosi_o;
+// assign dut_if.spi_miso = dut_if.spi_mosi;
 
 environment env;
 
@@ -36,22 +38,36 @@ initial begin
 end
 
 axis_spi_master #(
-    .SPI_MODE     (SPI_MODE    ),
-    .DATA_WIDTH   (DATA_WIDTH  ),
-    .MAIN_CLK     (MAIN_CLK    ),
-    .SPI_CLK      (SPI_CLK     ),
-    .SLAVE_NUM    (SLAVE_NUM   ),
-    .WAIT_TIME    (WAIT_TIME   )
-) dut (
-    .clk_i         (dut_if.clk_i     ),
-    .arstn_i       (dut_if.arstn_i   ),
-    .addr_i        (dut_if.addr_i    ),
-    .spi_clk_o     (dut_if.spi_clk_o ),
-    .spi_cs_o      (dut_if.spi_cs_o  ),
-    .spi_mosi_o    (dut_if.spi_mosi_o),
-    .spi_miso_i    (dut_if.spi_miso_i),
-    .s_axis        (s_axis           ),
-    .m_axis        (m_axis           )
+    .SPI_MODE   (SPI_MODE       ),
+    .DATA_WIDTH (DATA_WIDTH     ),
+    .MAIN_CLK   (MAIN_CLK       ),
+    .SPI_CLK    (SPI_CLK        ),
+    .SLAVE_NUM  (SLAVE_NUM      ),
+    .WAIT_TIME  (WAIT_TIME      )
+) i_axis_spi_master (
+    .clk_i      (dut_if.clk_i   ),
+    .arstn_i    (dut_if.arstn_i ),
+    .addr_i     (dut_if.addr_i  ),
+    .spi_clk_o  (dut_if.spi_clk ),
+    .spi_cs_o   (dut_if.spi_cs  ),
+    .spi_mosi_o (dut_if.spi_mosi),
+    .spi_miso_i (dut_if.spi_miso),
+    .s_axis     (s_axis         ),
+    .m_axis     (axis_master    )
+);
+
+axis_spi_slave #(
+    .SPI_MODE   (SPI_MODE       ),
+    .DATA_WIDTH (DATA_WIDTH     )
+) i_axis_spi_slave (
+    .clk_i      (dut_if.clk_i   ),
+    .arstn_i    (dut_if.arstn_i ),
+    .spi_clk_i  (dut_if.spi_clk ),
+    .spi_cs_i   (dut_if.spi_cs  ),
+    .spi_mosi_i (dut_if.spi_mosi),
+    .spi_miso_o (dut_if.spi_miso),
+    .s_axis     (axis_slave     ),
+    .m_axis     (m_axis         )
 );
 
 endmodule

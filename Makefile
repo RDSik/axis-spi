@@ -13,6 +13,7 @@ TCL        := project.tcl
 SRC_FILES += $(RTL_DIR)/axis_spi_top.sv
 SRC_FILES += $(RTL_DIR)/axis_if.sv
 SRC_FILES += $(RTL_DIR)/axis_spi_master.sv
+SRC_FILES += $(RTL_DIR)/axis_spi_slave.sv
 SRC_FILES += $(RTL_DIR)/axis_data_gen.sv
 
 SRC_FILES += $(TB_DIR)/axis_spi_top_tb.sv

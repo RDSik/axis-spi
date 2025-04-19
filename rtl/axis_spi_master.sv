@@ -79,7 +79,9 @@ typedef enum logic [1:0] {
 my_state state;
 
 if (SLAVE_NUM == 1) begin
-    assign spi_cs_o = spi_cs_reg;
+    always_ff @(posedge clk_I) begin
+        spi_cs_o = spi_cs_reg;
+    end
 end else begin
     always_ff @(posedge clk_i) begin
         for (int i = 0; i < SLAVE_NUM; i++) begin

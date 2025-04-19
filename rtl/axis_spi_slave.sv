@@ -36,6 +36,7 @@ logic                          m_axis_tvalid_reg;
 
 logic [DATA_WIDTH-1:0]         tx_data;
 logic [$clog2(DATA_WIDTH)-1:0] tx_bit_cnt;
+logic                          tx_bit_done;
 
 logic [DATA_WIDTH-1:0]         rx_data_d;
 logic [DATA_WIDTH-1:0]         rx_data;
@@ -82,6 +83,8 @@ always_ff @(negedge spi_clk or posedge spi_cs_i) begin
         spi_miso_reg <= tx_data[tx_bit_cnt];
     end
 end
+
+assign tx_bit_done = ~(|tx_bit_cnt);
 
 always @(posedge spi_clk or posedge spi_cs_i) begin
     if (spi_cs_i) begin
@@ -140,7 +143,7 @@ always_ff @(posedge clk_i or negedge arstn_i) begin
 end
 // ------------------------------------------------------------
 
-assign s_axis.tready = 1'b1;
+assign s_axis.tready = tx_bit_done ? 1'b1 : 1'b0;
 assign m_axis.tvalid = m_axis_tvalid_reg;
 assign m_axis.tdata  = m_axis_tdata_reg;
 assign s_handshake   = s_axis.tvalid & s_axis.tready;

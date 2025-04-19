@@ -25,8 +25,6 @@ module axis_spi_slave #(
     axis_if.master m_axis
 );
 
-localparam CPHA = (SPI_MODE == 1) || (SPI_MODE == 3);
-
 logic                          spi_clk;
 logic                          spi_miso_reg;
 logic                          preload_miso;
@@ -48,7 +46,7 @@ logic                          rx_done;
 logic                          s_handshake;
 logic                          m_handshake;
 
-assign spi_clk = (CPHA) ? ~spi_clk_i : spi_clk_i;
+assign spi_clk = ((SPI_MODE == 2) || (SPI_MODE == 1)) ? ~spi_clk_i : spi_clk_i;
 
 // MOSI data---------------------------------------------------
 always @(posedge spi_clk or posedge spi_cs_i) begin
@@ -73,7 +71,7 @@ assign rx_bit_done = (rx_bit_cnt == DATA_WIDTH - 1) ? 1'b1 : 1'b0;
 // ------------------------------------------------------------
 
 // MISO data---------------------------------------------------
-always_ff @(posedge spi_clk or posedge spi_cs_i) begin
+always_ff @(negedge spi_clk or posedge spi_cs_i) begin
     if (spi_cs_i) begin
         /* verilator lint_off WIDTHTRUNC */
         tx_bit_cnt   <= DATA_WIDTH - 1;
@@ -93,10 +91,13 @@ always @(posedge spi_clk or posedge spi_cs_i) begin
     end
 end
 
-assign spi_miso_o = preload_miso ? tx_data[DATA_WIDTH-1] : spi_miso_reg;
+assign miso_mux = preload_miso ? tx_data[DATA_WIDTH-1] : spi_miso_reg;
 
-// Tri-state logic
-// assign spi_miso_o = spi_cs_i ? 1'bZ : miso_mux;
+`ifdef VERILATOR
+assign spi_miso_o = miso_mux;
+`else
+assign spi_miso_o = spi_cs_i ? 1'bZ : miso_mux;
+`endif
 // ------------------------------------------------------------
 
 // Synchronize Clock domains-----------------------------------

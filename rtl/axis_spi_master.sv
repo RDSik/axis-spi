@@ -79,7 +79,7 @@ typedef enum logic [1:0] {
 my_state state;
 
 if (SLAVE_NUM == 1) begin
-    always_ff @(posedge clk_I) begin
+    always_ff @(posedge clk_i) begin
         spi_cs_o = spi_cs_reg;
     end
 end else begin

@@ -26,7 +26,6 @@ module axis_spi_slave #(
 );
 
 localparam CPHA = (SPI_MODE == 1) || (SPI_MODE == 3);
-localparam CPOL = (SPI_MODE == 2) || (SPI_MODE == 3);
 
 logic                          spi_clk;
 logic                          spi_miso_reg;
@@ -34,8 +33,8 @@ logic                          preload_miso;
 logic                          miso_mux;
 logic                          sync;
 
+logic [DATA_WIDTH-1:0]         m_axis_tdata_reg;
 logic                          m_axis_tvalid_reg;
-logic                          m_axis_tdata_reg;
 
 logic [DATA_WIDTH-1:0]         tx_data;
 logic [$clog2(DATA_WIDTH)-1:0] tx_bit_cnt;
@@ -56,8 +55,6 @@ always @(posedge spi_clk or posedge spi_cs_i) begin
     if (spi_cs_i) begin
         rx_bit_cnt <= '0;
         rx_done    <= '0;
-        rx_data    <= '0;
-        rx_data_d  <= '0;
     end else begin
         rx_bit_cnt <= rx_bit_done ? '0 : rx_bit_cnt + 1'b1;
         rx_data_d  <= {rx_data_d[DATA_WIDTH-2:0], spi_mosi_i};
@@ -96,10 +93,10 @@ always @(posedge spi_clk or posedge spi_cs_i) begin
     end
 end
 
-assign miso_mux = preload_miso ? tx_data[DATA_WIDTH-1] : spi_miso_reg;
+assign spi_miso_o = preload_miso ? tx_data[DATA_WIDTH-1] : spi_miso_reg;
 
 // Tri-state logic
-assign spi_miso_o = spi_cs_i ? 1'bZ : miso_mux;
+// assign spi_miso_o = spi_cs_i ? 1'bZ : miso_mux;
 // ------------------------------------------------------------
 
 // Synchronize Clock domains-----------------------------------

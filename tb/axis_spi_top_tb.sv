@@ -20,8 +20,8 @@ localparam PACKET_NUM = 10;
 axis_spi_top_if dut_if();
 axis_if         s_axis();
 axis_if         m_axis();
-axis_if         axis_master();
-axis_if         axis_slave();
+axis_if         axis_m();
+axis_if         axis_s();
 
 // assign dut_if.spi_miso = dut_if.spi_mosi;
 
@@ -53,7 +53,7 @@ axis_spi_master #(
     .spi_mosi_o (dut_if.spi_mosi),
     .spi_miso_i (dut_if.spi_miso),
     .s_axis     (s_axis         ),
-    .m_axis     (axis_master    )
+    .m_axis     (axis_m         )
 );
 
 axis_spi_slave #(
@@ -66,7 +66,7 @@ axis_spi_slave #(
     .spi_cs_i   (dut_if.spi_cs  ),
     .spi_mosi_i (dut_if.spi_mosi),
     .spi_miso_o (dut_if.spi_miso),
-    .s_axis     (axis_slave     ),
+    .s_axis     (axis_s         ),
     .m_axis     (m_axis         )
 );
 

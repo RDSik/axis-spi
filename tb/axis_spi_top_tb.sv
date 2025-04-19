@@ -65,7 +65,7 @@ axis_spi_slave #(
     .spi_cs_i   (dut_if.spi_cs  ),
     .spi_mosi_i (dut_if.spi_mosi),
     .spi_miso_o (dut_if.spi_miso),
-    .s_axis     (axis.          ),
+    .s_axis     (axis           ),
     .m_axis     (m_axis         )
 );
 

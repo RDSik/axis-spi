@@ -102,7 +102,7 @@ assign miso_mux = preload_miso ? tx_data[DATA_WIDTH-1] : spi_miso_reg;
 `ifdef VERILATOR
 assign spi_miso_o = miso_mux;
 `else
-assign spi_miso_o = spi_cs_i ? 1'bZ : miso_mux;
+assign spi_miso_o = spi_cs_i ? 1'bz : miso_mux;
 `endif
 // ------------------------------------------------------------
 

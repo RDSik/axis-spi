@@ -107,19 +107,17 @@ assign spi_miso_o = spi_cs_i ? 1'bz : miso_mux;
 // ------------------------------------------------------------
 
 // Synchronize Clock domains-----------------------------------
-localparam DELAY = 3;
-
-logic [DELAY-1:0] delay;
+logic [1:0] delay;
 
 always @(posedge clk_i or negedge arstn_i) begin
     if (~arstn_i) begin
-        delay <= '0;
+        {delay[1], delay[0]} <= '0;
     end else begin
-        delay <= {delay[DELAY-2:0], rx_done};
+        {delay[1], delay[0]} <= {delay[0], rx_done};
     end
 end
 
-assign sync = ((delay[DELAY-1] == 1'b0) && (delay[DELAY-2] == 1'b1)) ? 1'b1 : 1'b0;
+assign sync = ((delay[1] == 1'b0) && (delay[0] == 1'b1)) ? 1'b1 : 1'b0;
 // ------------------------------------------------------------
 
 // Slave AXI-Stream data---------------------------------------
